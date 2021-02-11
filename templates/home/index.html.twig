@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Accueil{% endblock %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('home') }}
+    {% endblock %}
+
+{% block body %}
+    <div class="justify-content-center text-center">
+        <h1 class="m-5 text-center">Stats Aviron - Saison {{ currentSeason }}</h1>
+    </div>
+    <section class="container">
+        <div class="row justify-content-center align-items-center box-shadow card-shadow">
+            <div class="col-8 col-md-4 text-center mt-2 mb-2">
+                <h5>Total inscrits licence A</h5>
+                {% for subscriberCount in actualSubscribers %}
+                    <p class="subscribers-count mb-0">{{ subscriberCount }}</p>
+                {% endfor %}
+            </div>
+            <div class="col-8 col-md-4 text-center divider-border mt-2 mb-2">
+                <h5>Total nouveaux inscrits licence A</h5>
+                {% for NewSubscriberCount in newSubscribers %}
+                    <p class="subscribers-count mb-0">{{ NewSubscriberCount }}</p>
+                {% endfor %}
+            </div>
+            <div class="col-8 col-md-4 text-center mt-2 mb-2">
+                <h5>Total jeunes licence A</h5>
+                {% for youngSubscribersCount in youngSubscribers %}
+                    <p class="subscribers-count mb-0">{{ youngSubscribersCount }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row justify-content-between align-items-center mt-5">
+            <div class="col-xl-6 my-4 text-center card-shadow py-4 box-shadow">
+                <h4 class="mb-4">Répartition par catégories</h4>
+                {{ render_chart(categoriesChart) }}
+            </div>
+            <div class="col-xl-6 my-4 text-center card-shadow py-4 box-shadow">
+                <h4 class="mb-4">Répartition par licences</h4>
+                {{ render_chart(licencesChart) }}
+            </div>
+        </div>
+        <div class="row justify-content-between align-items-center mt-5">
+            <div class="col text-center card-shadow py-4 box-shadow">
+                <h4 class="mb-4">Évolution mensuelle des inscriptions</h4>
+                <div class="px-5 py-3">
+                    {{ render_chart(monthlySubscriptionsChart) }}
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-between align-items-center mt-5">
+            <div class="col-xl-6 my-4 text-center card-shadow py-4 box-shadow pr-3">
+                <h4 class="mb-4">Total de licenciés par statut sur l'année en cours</h4>
+                <table class="table table-hover table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th class="w-25"></th>
+                        {% for status,count in subscribersByStatus %}
+                            <th scope="col" class="text-center"> {{ status }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>{{ currentSeason }}</th>
+                        {% for status,count in subscribersByStatus %}
+                            <td class="font-weight-bold">{{ count }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% if previousSeason is not null %}
+                        <tr>
+                            <th>{{ previousSeason }}</th>
+                            {% for status,count in previousSubscribersByStatus %}
+                                <td>{{ count }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xl-6 my-4 text-center card-shadow py-4 box-shadow">
+                <h4 class="mb-4">Total de licenciés par licence sur l'année en cours</h4>
+                <table class="table table-hover table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th class="w-25"></th>
+                        {% for licence,count in subscribersByLicences %}
+                            <th scope="col" class="text-center"> {{ licence }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>{{ currentSeason }}</th>
+                        {% for licence,count in subscribersByLicences %}
+                            <td class="font-weight-bold">{{ count }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% if previousSeason is not null %}
+                        <tr>
+                            <th>{{ previousSeason}}</th>
+                            {% for licence,count in previousSubscribersByLicences %}
+                                <td>{{ count }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row justify-content-between align-items-center mt-5">
+            <div class="col text-center card-shadow py-4 box-shadow">
+                <h4 class="mb-4">Total de licenciés par catégorie sur l'année en cours</h4>
+                <table class="table table-hover table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th></th>
+                        {% for category, count in subscribersByCategories %}
+                            <th>{{ category }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>{{ currentSeason }}</th>
+                        {% for category, count in subscribersByCategories %}
+                            <td class="font-weight-bold"> {{ count }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% if previousSeason is not null %}
+                        <tr>
+                            <th>{{ previousSeason  ?? '-'}}</th>
+                            {% for category, count in previousSubscribersByCategories %}
+                                <td> {{ count }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
